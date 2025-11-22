@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="utf-8"?> <menu xmlns:android="http://schemas.android.com/apk/res/android"> <item android:id="@+id/menu_logs" android:title="Logs" android:icon="@drawable/ic_outline_history_24" android:showAsAction="ifRoom"/> </menu>

@@ -1,0 +1,16 @@
+<resources>
+    <!-- DayNight auto-switch; one definition only -->
+    <style name="Theme.TrueText" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/tt_dark_accent</item>
+        <item name="colorSecondary">@color/tt_dark_accent</item>
+        <item name="tabStyle">@style/TrueText.TabLayout</item>
+    </style>
+
+    <style name="TrueText.TabLayout" parent="Widget.Material3.TabLayout">
+        <item name="tabIndicator">@drawable/tab_indicator</item>
+        <item name="tabIndicatorFullWidth">false</item>
+        <item name="tabIndicatorAnimationMode">elastic</item>
+        <item name="tabTextColor">@color/tt_dark_subtext</item>
+        <item name="tabSelectedTextColor">@color/tt_dark_text</item>
+    </style>
+</resources>

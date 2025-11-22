@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="tt_dark_bg_start">#0F2027</color>
+    <color name="tt_dark_bg_end">#203A43</color>
+    <color name="tt_dark_surface">#1B1F24</color>
+    <color name="tt_dark_accent">#00FFF5</color>
+    <color name="tt_dark_text">#F1F1F1</color>
+    <color name="tt_dark_subtext">#99FFFFFF</color>
+
+    <color name="tt_light_bg_start">#E3E8EF</color>
+    <color name="tt_light_bg_end">#FFFFFF</color>
+    <color name="tt_light_surface">#F9FAFC</color>
+    <color name="tt_light_accent">#0077FF</color>
+    <color name="tt_light_text">#111111</color>
+    <color name="tt_light_subtext">#A6000000</color>
+</resources>
