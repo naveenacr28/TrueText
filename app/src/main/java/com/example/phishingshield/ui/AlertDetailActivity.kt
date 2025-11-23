@@ -19,8 +19,8 @@ class AlertDetailActivity : AppCompatActivity() {
         val createdAt = intent.getLongExtra("createdAt", 0L)
 
         findViewById<TextView>(R.id.detail_severity).text = severity
-        findViewById<TextView>(R.id.detail_conf).text = "Confidence %.2f • %dms".format(confidence, latencyMs)
-        // 12-hour format with AM/PM
+        findViewById<TextView>(R.id.detail_conf).text =
+            "Confidence %.2f • %dms".format(confidence, latencyMs)
         val df = SimpleDateFormat("MMM d, hh:mm a", Locale.getDefault())
         findViewById<TextView>(R.id.detail_time).text = df.format(Date(createdAt))
         findViewById<TextView>(R.id.detail_msg).text = message

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Status-bar-safe, centered header -->
+    <!-- Header logo+app name bar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="88dp"
@@ -13,7 +13,7 @@
         android:orientation="horizontal"
         android:gravity="center"
         android:paddingTop="24dp"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="8dp">
 
         <ImageView
             android:layout_width="40dp"
@@ -21,7 +21,6 @@
             android:src="@drawable/logo_truetext_background"
             android:contentDescription="@string/app_name"
             android:layout_marginEnd="14dp"/>
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,20 +30,21 @@
             android:textColor="#FDFDFD"/>
     </LinearLayout>
 
-    <!-- Add your tabs and card list here -->
-    <!-- Example: -->
+    <!-- Tabs for sections -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tabTextColor="#91A7C7"
-        app:tabSelectedTextColor="#FDFDFD"
-        app:tabIndicatorFullWidth="false"/>
+        app:tabSelectedTextColor="#00F6FF"
+        app:tabIndicatorFullWidth="false"
+        android:background="@android:color/transparent"
+        android:elevation="0dp" />
 
+    <!-- Pager for fragments -->
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
-
+        android:layout_weight="1" />
 </LinearLayout>

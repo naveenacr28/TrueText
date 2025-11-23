@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.example.phishingshield">
-    <!-- Device features -->
-    <uses-feature android:name="android.hardware.telephony" android:required="false" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.phishingshield">
 
-    <!-- Permissions -->
+    <uses-feature android:name="android.hardware.telephony" android:required="true" />
+
+    <!-- SMS app permissions -->
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_WAP_PUSH" />
+    <uses-permission android:name="android.permission.RECEIVE_MMS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_SMS" />
+    <uses-permission android:name="android.permission.BROADCAST_SMS" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
-    <uses-permission android:name="android.permission.READ_SMS"/>
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="true"
@@ -19,7 +26,7 @@
         android:usesCleartextTraffic="true"
         android:networkSecurityConfig="@xml/network_security_config">
 
-
+        <!-- Main activity: must support SMS/MMS/SENDTO/VIEW to qualify as default SMS on modern Android -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -27,22 +34,41 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- For "sms:", "smsto:", "mms:", "mmsto:" links -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="sms"/>
+                <data android:scheme="smsto"/>
+                <data android:scheme="mms"/>
+                <data android:scheme="mmsto"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SENDTO"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="sms"/>
+                <data android:scheme="smsto"/>
+                <data android:scheme="mms"/>
+                <data android:scheme="mmsto"/>
+            </intent-filter>
         </activity>
 
-        <!-- Logs screen -->
-        <activity
-            android:name=".ui.LogsActivity"
-            android:exported="false" />
+        <!-- Compose activity: required for handling system compose intents -->
+        <activity android:name=".ui.ComposeActivity" />
 
-        <!-- SMS receiver -->
+        <activity android:name=".ui.LogsActivity" android:exported="false" />
+        <activity android:name=".ui.AlertDetailActivity" />
+
+        <!-- SMS receiver for default SMS app -->
         <receiver
             android:name=".sms.SmsReceiver"
-            android:exported="true"
-            android:permission="android.permission.BROADCAST_SMS">
+            android:permission="android.permission.BROADCAST_SMS"
+            android:exported="true">
             <intent-filter android:priority="999">
-                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+                <action android:name="android.provider.Telephony.SMS_DELIVER" />
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-        <activity android:name=".ui.AlertDetailActivity" />
     </application>
 </manifest>

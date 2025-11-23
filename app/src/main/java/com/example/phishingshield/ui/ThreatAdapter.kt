@@ -28,14 +28,12 @@ class ThreatAdapter : ListAdapter<Threat, ThreatAdapter.H>(DIFF) {
     }
     override fun onBindViewHolder(h: H, i: Int) {
         val x = getItem(i)
-        // 12-hour format with AM/PM
         val df = SimpleDateFormat("MMM d, hh:mm a", Locale.getDefault())
         val time = df.format(Date(x.createdAt))
         h.title.text = x.severity
         h.sub.text = "Confidence ${"%.2f".format(x.confidence)} • ${x.latencyMs}ms • $time"
         h.msg.text = x.message
 
-        // Tap row to open full details
         h.root.setOnClickListener {
             val ctx = h.root.context
             val intent = Intent(ctx, AlertDetailActivity::class.java)

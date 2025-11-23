@@ -26,11 +26,12 @@ class ListFragment : Fragment() {
         list.layoutManager = LinearLayoutManager(requireContext())
         list.adapter = adapter
 
-        val which = arguments?.getString(ARG_KIND) ?: "All"
+        val which = arguments?.getString(ARG_KIND) ?: "Safe"
         val obs = when (which) {
             "Smishing" -> vm.smishing
-            "Spam" -> vm.spam
-            else -> vm.all
+            "Spam"     -> vm.spam
+            "Safe"     -> vm.safe
+            else       -> vm.safe
         }
         val observer = Observer { items: List<com.example.phishingshield.data.Threat> ->
             adapter.submitList(items)
@@ -45,5 +46,4 @@ class ListFragment : Fragment() {
             arguments = Bundle().apply { putString(ARG_KIND, kind) }
         }
     }
-
 }

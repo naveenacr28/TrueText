@@ -36,24 +36,42 @@ object Notify {
         val nm = NotificationManagerCompat.from(ctx)
         if (!nm.areNotificationsEnabled()) return
 
-        val isSmish = severity.equals("Smishing", true)
-        val layoutId = if (isSmish) R.layout.notify_smishing else R.layout.notify_spam
+        val layoutId = when {
+            severity.equals("Smishing", true) -> R.layout.notify_smishing
+            severity.equals("Spam", true) -> R.layout.notify_spam
+            else -> R.layout.notify_safe // <-- you must create this minimal layout!
+        }
+
         val rv = RemoteViews(ctx.packageName, layoutId)
 
         val confText = "Confidence " + String.format(Locale.US, "%.2f", conf)
         rv.setTextViewText(R.id.brand, "TrueText")
-        rv.setTextViewText(R.id.title, if (isSmish) "Smishing Detected" else "Spam Detected")
+        rv.setTextViewText(R.id.title,
+            when {
+                severity.equals("Smishing", true) -> "Smishing Detected"
+                severity.equals("Spam", true) -> "Spam Detected"
+                else -> "Safe Message"
+            }
+        )
         rv.setTextViewText(R.id.line1, "$confText • ${latencyMs}ms")
         rv.setTextViewText(R.id.message, preview.take(180))
         rv.setImageViewResource(R.id.logo, R.drawable.logo_truetext_background)
-        rv.setImageViewResource(R.id.badge, if (isSmish) R.drawable.ic_danger_red else R.drawable.ic_warning_yellow)
+        rv.setImageViewResource(R.id.badge,
+            when {
+                severity.equals("Smishing", true) -> R.drawable.ic_danger_red
+                severity.equals("Spam", true) -> R.drawable.ic_warning_yellow
+                else -> R.drawable.ic_check_green // <-- use green check or badge icon
+            }
+        )
 
-        val smallIcon = if (isSmish) R.drawable.ic_danger_red else R.drawable.ic_warning_yellow
+        val smallIcon = when {
+            severity.equals("Smishing", true) -> R.drawable.ic_danger_red
+            severity.equals("Spam", true) -> R.drawable.ic_warning_yellow
+            else -> R.drawable.ic_check_green // <-- use green icon for Safe!
+        }
 
-        // ---------- NEW: Launch app when notification tapped -----------
         val launchIntent = Intent(ctx, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            // Optionally add more extras to pass threat data if wanted
         }
         val pendingIntent = PendingIntent.getActivity(
             ctx, 0, launchIntent,
@@ -69,7 +87,7 @@ object Notify {
             .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setAutoCancel(true)
             .setVibrate(longArrayOf(0, 400, 200, 400))
-            .setContentIntent(pendingIntent) // <-- This line enables tap-to-open-app
+            .setContentIntent(pendingIntent)
 
         nm.notify(System.currentTimeMillis().toInt(), builder.build())
     }

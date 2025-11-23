@@ -12,15 +12,11 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 class SmsReceiver : BroadcastReceiver() {
-
     override fun onReceive(context: Context, intent: Intent) {
-        // Probe log to ensure delivery
         android.util.Log.w("SmsReceiver", "TEST fired action=${intent.action}")
-
         if (Telephony.Sms.Intents.SMS_RECEIVED_ACTION != intent.action) return
         android.util.Log.i("SmsReceiver", "1 action=${intent.action}")
 
-        // Parse using framework helper
         val msgs = Telephony.Sms.Intents.getMessagesFromIntent(intent)
         val fullText = msgs.joinToString(" ") { it.displayMessageBody ?: "" }.trim()
         if (fullText.isEmpty()) return
@@ -38,17 +34,18 @@ class SmsReceiver : BroadcastReceiver() {
             val conf = json.optDouble("confidence", 0.0)
             val latency = json.optInt("latency_ms", 0)
 
-            // Normalize prediction text robustly
+            // Detect and label
             val p = pred.lowercase()
             val severity = when {
                 "smish" in p || "phish" in p -> "Smishing"
                 "spam" in p -> "Spam"
+                "ham" in p -> "Safe"
                 else -> "Suspicious"
             }
-            if (severity == "Suspicious" && p.contains("ham")) return@launch
 
             android.util.Log.i("SmsReceiver", "4 notify pred=$pred severity=$severity conf=$conf")
 
+            // Always send and store, use green for Safe only
             Notify.show(
                 ctx = context,
                 severity = severity,
@@ -56,6 +53,7 @@ class SmsReceiver : BroadcastReceiver() {
                 latencyMs = latency,
                 preview = fullText
             )
+
             try {
                 com.example.phishingshield.data.ThreatRepo(context).add(
                     com.example.phishingshield.data.Threat(
